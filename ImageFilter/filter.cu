@@ -1,6 +1,6 @@
 #include "main.cuh"
 
-__device__ unsigned int dlomutoPartition(unsigned char* data, unsigned int lo, unsigned int hi) {
+__device__ unsigned int dlomutoPartition(unsigned char*& data, unsigned int lo, unsigned int hi) {
     int pivot = data[hi];
     int i = lo;
     for (int j = lo; j < hi; ++j) {
@@ -56,20 +56,25 @@ __global__ void CUDAf::dMedianFilter(const unsigned int inputH, const unsigned i
     unsigned int l = 0; // index
     unsigned int r = count - 1; // index
 
-    while (l < r) {
-        unsigned int pivotIdx = dlomutoPartition(Temp, l, r);
-
-        if (key == pivotIdx) {
-            median_value = Temp[key];
-            break;
-        }
-        else if (key < pivotIdx)
-            r = pivotIdx - 1;
-        else
-            l = pivotIdx + 1;
+    if (l == r) {
+        median_value = Temp[key];
     }
+    else {
+        while (l < r) {
+            unsigned int pivotIdx = dlomutoPartition(Temp, l, r);
 
-    median_value = Temp[key];
+            if (key == pivotIdx) {
+                median_value = Temp[key];
+                break;
+            }
+            else if (key < pivotIdx) {
+                r = pivotIdx - 1;
+            }
+            else {
+                l = pivotIdx + 1;
+            }
+        }
+    }
 
     Y[cOut * yMapSize + height * outputW + width] = median_value;
 
