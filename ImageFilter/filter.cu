@@ -3,12 +3,18 @@
 __device__ unsigned int dlomutoPartition(unsigned char*& data, unsigned int lo, unsigned int hi) {
     int pivot = data[hi];
     int i = lo;
+    int temp = 0;
     for (int j = lo; j < hi; ++j) {
         if (data[j] <= pivot) {
             // Swap with XOR
-            data[i] = data[i] ^ data[j];
-            data[j] = data[i] ^ data[j];
-            data[i] = data[i] ^ data[j];
+            // data[i] = data[i] ^ data[j];
+            // data[j] = data[i] ^ data[j];
+            // data[i] = data[i] ^ data[j];
+
+            // Swap with temp
+            temp = data[i];
+            data[i] = data[j];
+            data[j] = temp;
             i++;
         }
     }
