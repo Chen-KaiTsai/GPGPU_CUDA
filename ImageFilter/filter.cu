@@ -18,10 +18,16 @@ __device__ unsigned int dlomutoPartition(unsigned char*& data, unsigned int lo, 
             i++;
         }
     }
-    data[i] = data[i] ^ data[hi];
-    data[hi] = data[i] ^ data[hi];
-    data[i] = data[i] ^ data[hi];
+
+    // Swap with XOR
+    // data[i] = data[i] ^ data[hi];
+    // data[hi] = data[i] ^ data[hi];
+    // data[i] = data[i] ^ data[hi];
     
+    temp = data[i];
+    data[i] = data[hi];
+    data[hi] = temp;
+
     return i;
 }
 
